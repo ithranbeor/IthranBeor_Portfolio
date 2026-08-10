@@ -414,14 +414,10 @@ function ProjectDetailCard({ project }: { project: Project }) {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={springy}
-              className="group/live mt-3 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-md"
+              className="group/live mt-3 inline-flex items-center gap-2 rounded-full px-2 py-1 text-[10px] text-white shadow-md"
               style={{ backgroundColor: tint(color, 0.9) }}
             >
               Visit Live Site
-              <LuExternalLink
-                size={14}
-                className="transition-transform duration-300 group-hover/live:translate-x-0.5 group-hover/live:-translate-y-0.5"
-              />
             </motion.a>
           )}
         </div>
