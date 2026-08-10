@@ -27,6 +27,7 @@ export interface Project {
   coreStack: string;
   description: string;
   proofs: ProjectProof[];
+  liveUrl?: string;
 }
 
 export const projects: Project[] = [
@@ -63,5 +64,6 @@ export const projects: Project[] = [
       { id: 'examsync-4', label: 'Pic 4', src: ExamSyncPic4 },
       { id: 'examsync-5', label: 'Vid 1', src: ExamSyncVid1 },
     ],
+    liveUrl: 'https://examsyncv2.com',
   },
 ];

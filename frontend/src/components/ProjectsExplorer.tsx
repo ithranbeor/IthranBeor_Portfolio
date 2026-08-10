@@ -2,8 +2,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LuX, LuChevronLeft, LuChevronRight, LuPlay } from 'react-icons/lu';
-import type { Project, ProjectCategory, ProjectProof } from '../data/projects.ts';
+import { LuX, LuChevronLeft, LuChevronRight, LuPlay, LuExternalLink, LuCircle } from 'react-icons/lu';import type { Project, ProjectCategory, ProjectProof } from '../data/projects.ts';
 import { useDominantColor } from '../hooks/useDominantColor.ts';
 
 const springy = {
@@ -66,6 +65,12 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: () => void
         borderColor: tint(color, 0.45),
       }}
     >
+      {project.liveUrl && (
+        <span className="absolute right-3 top-3 z-10 inline-flex items-center rounded-full bg-white px-2 py-1 text-[10px] font-lg text-white backdrop-blur-md">
+          <LuCircle size={6} className="fill-emerald-500 text-emerald-500 animate-ping text-9xl" />
+        </span>
+      )}
+
       {cover ? (
         <>
           {coverIsVideo ? (
@@ -386,6 +391,39 @@ function ProjectDetailCard({ project }: { project: Project }) {
             className="h-16 w-16 rounded-full bg-white object-cover shadow-sm"
           />
           <p className="mt-3 text-sm font-medium text-gray-800">{project.name}</p>
+
+          <span
+            className={`mt-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+              project.liveUrl
+                ? 'bg-emerald-500/15 text-emerald-700'
+                : 'bg-gray-500/15 text-gray-600'
+            }`}
+          >
+            <LuCircle
+              size={7}
+              className={project.liveUrl ? 'fill-emerald-500 text-emerald-500' : 'fill-gray-400 text-gray-400'}
+            />
+            {project.liveUrl ? 'Live' : 'Not Live'}
+          </span>
+
+          {project.liveUrl && (
+            <motion.a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              transition={springy}
+              className="group/live mt-3 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-white shadow-md"
+              style={{ backgroundColor: tint(color, 0.9) }}
+            >
+              Visit Live Site
+              <LuExternalLink
+                size={14}
+                className="transition-transform duration-300 group-hover/live:translate-x-0.5 group-hover/live:-translate-y-0.5"
+              />
+            </motion.a>
+          )}
         </div>
 
         <InfoRow label="About" value={project.description} />
