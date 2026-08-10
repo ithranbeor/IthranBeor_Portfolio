@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LuX, LuChevronLeft, LuChevronRight, LuPlay, LuExternalLink, LuCircle } from 'react-icons/lu';import type { Project, ProjectCategory, ProjectProof } from '../data/projects.ts';
+import { LuX, LuChevronLeft, LuChevronRight, LuPlay, LuCircle } from 'react-icons/lu';import type { Project, ProjectCategory, ProjectProof } from '../data/projects.ts';
 import { useDominantColor } from '../hooks/useDominantColor.ts';
 
 const springy = {
