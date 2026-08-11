@@ -77,7 +77,7 @@ export const projects: Project[] = [
   {
     id: "swiftconvert",
 
-    name: "Swiftconvert",
+    name: "PDFConvert",
 
     category: "solo",
 
@@ -91,7 +91,7 @@ export const projects: Project[] = [
       "Django, Django REST Framework, PostgreSQL, React, TypeScript, Vite",
 
     description:
-      "Swiftconvert is a fast, secure, and user-friendly online file conversion platform that allows users to convert documents and files directly from their browser. The platform is designed to simplify common file conversion tasks without requiring users to install additional software. Built with a scalable architecture, Swiftconvert supports multiple document tools while automatically processing and deleting uploaded files for improved privacy and security.",
+      "PDFConvert is a secure and user-friendly online file conversion platform that allows users to convert documents and files directly from their browser. The platform is designed to simplify common file conversion tasks without requiring users to install additional software. Built with a scalable architecture, PDFConvert supports multiple document tools while automatically processing and deleting uploaded files for improved privacy and security.",
 
     proofs: [
       { id: "swiftconvert-1", label: "Pic 1", src: SwiftconvertPic1 },
