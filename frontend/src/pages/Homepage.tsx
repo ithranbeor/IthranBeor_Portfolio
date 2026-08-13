@@ -596,7 +596,7 @@ function HomePage() {
                 Explore Projects
               </a>
               <a
-                href="/resume/Ithran-Beor-Resume.pdf"
+                href="/IthranBeorTurnoResume.pdf"
                 download
                 className="px-6 py-3 rounded-xl border border-gray-100 text-white hover:bg-white/10 transition-all duration-300"
               >
