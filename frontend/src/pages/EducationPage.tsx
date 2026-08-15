@@ -1,3 +1,5 @@
+// frontend/src/pages/EducationPage.tsx 
+
 import '../App.css';
 import IthranLogo from '../assets/logo/IthranLogo.png';
 import BreadcrumbNav from '../components/BreadcrumbNav.tsx';
@@ -34,10 +36,10 @@ function EducationPage() {
             absolute
             -right-72
             -top-56
-            h-[900px]
-            w-[900px]
+            h-225
+            w-225
             rounded-full
-            bg-gradient-to-bl
+            bg-linear-to-bl
             from-rose-400/45
             via-pink-300/30
             to-transparent
@@ -49,7 +51,7 @@ function EducationPage() {
         <div
           className="
             absolute
-            bottom-[-280px]
+            -bottom-70
             left-[8%]
             h-[700px]
             w-[700px]

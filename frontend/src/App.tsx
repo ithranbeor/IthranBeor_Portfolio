@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 
 import HomePage from "./pages/Homepage.tsx";
 import ProjectPage from "./pages/ProjectPage.tsx";
@@ -45,6 +46,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AnimatedRoutes />
+      <Analytics />
     </BrowserRouter>
   );
 }
