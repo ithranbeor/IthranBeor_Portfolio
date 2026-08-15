@@ -1,8 +1,9 @@
 // frontend/src/components/ContactCard.tsx
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SiIndeed } from 'react-icons/si';
-import { FaGithub, FaYahoo } from 'react-icons/fa6';
+import { FaGithub, FaYahoo, FaApple } from 'react-icons/fa6';
+import { FiChevronLeft, FiChevronRight, FiCheck, FiFileText, FiDownload, FiArrowLeft } from 'react-icons/fi';
 import type { CSSProperties } from 'react';
 
 import gmailIcon from '../assets/icons/gmail.png';
@@ -10,140 +11,355 @@ import linkedinIcon from '../assets/icons/linkedin.png';
 
 const springy = {
   type: 'spring' as const,
-  stiffness: 220,
-  damping: 28,
+  stiffness: 260,
+  damping: 30,
   mass: 0.9,
 };
 
-interface ContactLink {
+interface ContactCardData {
   id: string;
-  label: string;
-  href: string;
+  title: string;
+  subtitle: string;
+  href?: string;
+  copyValue?: string;
+  download?: string;
   image?: string;
   Icon?: React.ComponentType<{ size?: number; style?: CSSProperties }>;
-  color?: string;
+  iconColor?: string;
+  gradient: string; // tailwind gradient classes
 }
 
 const GMAIL_ADDRESS = 'ithranbeorturno07@gmail.com';
 const ICLOUD_ADDRESS = 'ithranbeor.turno@icloud.com';
 const YAHOO_ADDRESS = 'ithranbeorturno07@gmail.com';
 
-const links: ContactLink[] = [
+const baseCards: ContactCardData[] = [
   {
     id: 'gmail',
-    label: 'Gmail',
+    title: 'Gmail',
+    subtitle: GMAIL_ADDRESS,
     href: `https://mail.google.com/mail/?view=cm&fs=1&to=${GMAIL_ADDRESS}`,
     image: gmailIcon,
+    gradient: 'from-[#4285F4] via-[#34A853] to-[#FBBC05]',
   },
   {
-    id: 'linkedin',
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/ithran-beor-turno-95b869414/',
-    image: linkedinIcon,
-  },
-  {
-    id: 'indeed',
-    label: 'Indeed',
-    href: 'https://profile.indeed.com/?hl=en_PH&co=PH&from=gnav-homepage',
-    Icon: SiIndeed,
-    color: '#2164F3',
-  },
-  {
-    id: 'github',
-    label: 'GitHub',
-    href: 'https://github.com/ithranbeor',
-    Icon: FaGithub,
-    color: '#111111',
+    id: 'icloud',
+    title: 'iCloud',
+    subtitle: ICLOUD_ADDRESS,
+    copyValue: ICLOUD_ADDRESS,
+    Icon: FaApple,
+    iconColor: '#ffffff',
+    gradient: 'from-[#3A3A3C] via-[#8E8E93] to-[#D1D1D6]',
   },
   {
     id: 'yahoo',
-    label: 'Yahoo',
+    title: 'Yahoo Mail',
+    subtitle: YAHOO_ADDRESS,
     href: `https://compose.mail.yahoo.com/?to=${YAHOO_ADDRESS}`,
     Icon: FaYahoo,
-    color: '#6001D2',
+    iconColor: '#ffffff',
+    gradient: 'from-[#430297] via-[#6001D2] to-[#7B2BE2]',
+  },
+  {
+    id: 'linkedin',
+    title: 'LinkedIn',
+    subtitle: '@ithran-beor-turno',
+    href: 'https://www.linkedin.com/in/ithran-beor-turno-95b869414/',
+    image: linkedinIcon,
+    gradient: 'from-[#004182] via-[#0A66C2] to-[#0077B5]',
+  },
+  {
+    id: 'github',
+    title: 'GitHub',
+    subtitle: '@ithranbeor',
+    href: 'https://github.com/ithranbeor',
+    Icon: FaGithub,
+    iconColor: '#ffffff',
+    gradient: 'from-[#0D1117] via-[#24292F] to-[#57606A]',
+  },
+  {
+    id: 'indeed',
+    title: 'Indeed',
+    subtitle: 'View my profile',
+    href: 'https://profile.indeed.com/?hl=en_PH&co=PH&from=gnav-homepage',
+    Icon: SiIndeed,
+    iconColor: '#ffffff',
+    gradient: 'from-[#163B65] via-[#2557A7] to-[#2164F3]',
   },
 ];
 
-export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }: { resumeUrl?: string }) {
-  const [copied, setCopied] = useState(false);
+type ViewMode = 'carousel' | 'grid';
 
-  const handleCopyIcloud = async () => {
-    try {
-      await navigator.clipboard.writeText(ICLOUD_ADDRESS);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
+export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }: { resumeUrl?: string }) {
+  const cards: ContactCardData[] = useMemo(
+    () => [
+      ...baseCards,
+      {
+        id: 'resume',
+        title: 'Resume',
+        subtitle: 'Tap to download',
+        download: resumeUrl,
+        Icon: FiFileText,
+        iconColor: '#ffffff',
+        gradient: 'from-[#0F766E] via-[#059669] to-[#10B981]',
+      },
+    ],
+    [resumeUrl],
+  );
+
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [view, setView] = useState<ViewMode>('carousel');
+
+  const active = cards[index];
+
+  const go = (delta: number) => {
+    setDirection(delta);
+    setCopiedId(null);
+    setIndex((current) => (current + delta + cards.length) % cards.length);
+  };
+
+  const goTo = (targetIndex: number) => {
+    setDirection(targetIndex > index ? 1 : -1);
+    setCopiedId(null);
+    setIndex(targetIndex);
+  };
+
+  const activate = async (card: ContactCardData) => {
+    if (card.download) {
+      const link = document.createElement('a');
+      link.href = card.download;
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return;
+    }
+    if (card.href) {
+      window.open(card.href, '_blank', 'noreferrer');
+      return;
+    }
+    if (card.copyValue) {
+      try {
+        await navigator.clipboard.writeText(card.copyValue);
+        setCopiedId(card.id);
+        setTimeout(() => setCopiedId((current) => (current === card.id ? null : current)), 1600);
+      } catch {
+        // clipboard not available — fail silently
+      }
     }
   };
 
+  const Icon = active.Icon;
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={springy}
-      className="w-full max-w-sm rounded-4xl border border-white/40 bg-white/10 px-8 py-7 text-center shadow-lg backdrop-blur-xl"
-    >
-      <h2 className="text-base font-semibold text-gray-800">Get in Touch</h2>
+    <div className="flex w-full max-w-4xl flex-col items-center px-3 sm:px-4">
+      <AnimatePresence mode="wait" initial={false}>
+        {view === 'carousel' ? (
+          <motion.div
+            key="carousel"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={springy}
+            className="flex w-full max-w-md flex-col items-center sm:max-w-xl"
+          >
+            <div className="flex w-full items-center justify-center gap-2 sm:gap-6 md:gap-10">
+              {/* Prev */}
+              <motion.button
+                type="button"
+                onClick={() => go(-1)}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={springy}
+                aria-label="Previous contact"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/30 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white/50 sm:h-9 sm:w-9"
+              >
+                <FiChevronLeft size={16} className="sm:hidden" />
+                <FiChevronLeft size={18} className="hidden sm:block" />
+              </motion.button>
 
-      <div className="mt-4 flex items-center justify-center gap-4">
-        {links.map((link) => {
-          const isExternal = link.href.startsWith('http');
-          const Icon = link.Icon;
-          return (
+              {/* Card */}
+              <div className="relative h-44 w-full min-w-0 sm:h-56">
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                  <motion.button
+                    key={active.id}
+                    type="button"
+                    onClick={() => activate(active)}
+                    custom={direction}
+                    initial={{ x: direction >= 0 ? 60 : -60, opacity: 0, scale: 0.96 }}
+                    animate={{ x: 0, opacity: 1, scale: 1 }}
+                    exit={{ x: direction >= 0 ? -60 : 60, opacity: 0, scale: 0.96 }}
+                    transition={springy}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`absolute inset-0 flex w-full flex-col justify-between rounded-2xl bg-linear-to-br ${active.gradient} p-4 text-left text-white shadow-xl sm:rounded-3xl sm:p-6`}
+                  >
+                    {/* Top row */}
+                    <div className="flex items-start justify-between">
+                      <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/80 sm:text-[11px] sm:tracking-[0.18em]">
+                        Ithran Beor
+                      </span>
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm sm:h-9 sm:w-9">
+                        {active.image ? (
+                          <img src={active.image} alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" />
+                        ) : (
+                          <>
+                            {Icon && (
+                              <Icon size={14} style={{ color: active.iconColor }} className="sm:hidden" />
+                            )}
+                            {Icon && (
+                              <Icon size={18} style={{ color: active.iconColor }} className="hidden sm:block" />
+                            )}
+                          </>
+                        )}
+                      </span>
+                    </div>
+
+                    {/* Bottom row */}
+                    <div className="min-w-0">
+                      <p className="truncate text-lg font-semibold leading-tight sm:text-2xl">{active.title}</p>
+                      <AnimatePresence mode="wait" initial={false}>
+                        {copiedId === active.id ? (
+                          <motion.p
+                            key="copied"
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            className="mt-1 flex items-center gap-1 text-xs font-medium text-emerald-300 sm:text-sm"
+                          >
+                            <FiCheck size={13} /> Copied to clipboard
+                          </motion.p>
+                        ) : (
+                          <motion.p
+                            key="subtitle"
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            className="mt-1 truncate text-xs text-white/80 sm:text-sm"
+                          >
+                            {active.subtitle}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.button>
+                </AnimatePresence>
+              </div>
+
+              {/* Next */}
+              <motion.button
+                type="button"
+                onClick={() => go(1)}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                transition={springy}
+                aria-label="Next contact"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/30 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white/50 sm:h-9 sm:w-9"
+              >
+                <FiChevronRight size={16} className="sm:hidden" />
+                <FiChevronRight size={18} className="hidden sm:block" />
+              </motion.button>
+            </div>
+
+            {/* Dots + See all */}
+            <div className="mt-4 flex w-full flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <div className="flex items-center gap-1.5">
+                {cards.map((card, i) => (
+                  <button
+                    key={card.id}
+                    type="button"
+                    onClick={() => goTo(i)}
+                    aria-label={`Go to ${card.title}`}
+                    className={`h-1.5 rounded-full transition-all ${
+                      i === index ? 'w-5 bg-gray-700' : 'w-1.5 bg-gray-400/60 hover:bg-gray-500'
+                    }`}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => setView('grid')}
+                className="text-xs font-medium text-gray-700 transition hover:text-gray-900"
+              >
+                See all cards
+              </button>
+            </div>
+
+            {/* Resume — kept visible directly, not just tucked inside the carousel */}
             <motion.a
-              key={link.id}
-              href={link.href}
-              target={isExternal ? '_blank' : undefined}
-              rel={isExternal ? 'noreferrer' : undefined}
-              aria-label={link.label}
-              whileHover={{ y: -3, scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              href={resumeUrl}
+              download
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
               transition={springy}
-              className="flex h-8 w-8 items-center justify-center"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-gray-500/50 px-5 py-2 text-xs font-medium text-white shadow-sm backdrop-blur-sm transition hover:bg-gray-500/85 sm:px-6 sm:py-2.5 sm:text-sm"
             >
-              {link.image ? (
-                <img src={link.image} alt={link.label} className="h-6 w-6 object-contain" />
-              ) : (
-                Icon && <Icon size={24} style={{ color: link.color }} />
-              )}
+              <FiDownload size={13} className="sm:hidden" />
+              <FiDownload size={14} className="hidden sm:block" />
+              Download Resume
             </motion.a>
-          );
-        })}
-      </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="grid"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={springy}
+            className="w-full"
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-gray-800">All cards</h3>
+              <button
+                type="button"
+                onClick={() => setView('carousel')}
+                className="flex items-center gap-1.5 text-xs font-medium text-gray-700 transition hover:text-gray-900"
+              >
+                <FiArrowLeft size={13} />
+                Back
+              </button>
+            </div>
 
-      <motion.a
-        href={resumeUrl}
-        download
-        whileHover={{ y: -2 }}
-        whileTap={{ scale: 0.97 }}
-        transition={springy}
-        className="mt-6 inline-flex items-center justify-center rounded-full border border-white/30 bg-gray-500/50 px-6 py-2.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition hover:bg-gray-500/85"
-      >
-        Download Resume
-      </motion.a>
-
-      <div className="relative mt-4 flex flex-col items-center gap-1">
-        <button
-          type="button"
-          onClick={handleCopyIcloud}
-          className="text-xs text-gray-600 underline decoration-dotted underline-offset-2 transition hover:text-gray-800"
-        >
-          Also on iCloud — {ICLOUD_ADDRESS}
-        </button>
-        <AnimatePresence>
-          {copied && (
-            <motion.span
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={springy}
-              className="text-[11px] font-medium text-emerald-600"
-            >
-              Copied to clipboard
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+              {cards.map((card, i) => {
+                const CardIcon = card.Icon;
+                return (
+                  <motion.button
+                    key={card.id}
+                    type="button"
+                    onClick={() => {
+                      goTo(i);
+                      activate(card);
+                    }}
+                    whileHover={{ y: -3, scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={springy}
+                    className={`flex h-28 flex-col justify-between rounded-2xl bg-linear-to-br ${card.gradient} p-3.5 text-left text-white shadow-md sm:h-36 sm:p-4 md:h-44 md:p-5`}
+                  >
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm sm:h-9 sm:w-9 md:h-10 md:w-10">
+                      {card.image ? (
+                        <img src={card.image} alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" />
+                      ) : (
+                        CardIcon && <CardIcon size={14} style={{ color: card.iconColor }} />
+                      )}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold leading-tight sm:text-base md:text-lg">
+                        {card.title}
+                      </p>
+                      <p className="mt-0.5 truncate text-[10px] text-white/75 sm:text-xs">
+                        {copiedId === card.id ? 'Copied!' : card.subtitle}
+                      </p>
+                    </div>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

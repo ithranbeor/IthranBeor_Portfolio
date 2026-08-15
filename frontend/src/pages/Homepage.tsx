@@ -1,18 +1,13 @@
+import { useState } from 'react';
 import '../App.css'
 import { Link } from 'react-router-dom';
 import Ithran from '../assets/images/ithran.png'
 import IthranLogo from '../assets/logo/IthranLogo.png'
 import Canvaicon from '../assets/logo/Canvaicon.png'
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '../components/BreadcrumbNav.tsx';
 import FloatingNavigation from "../components/FloatingNavigation";
 import { projects } from '../data/projects.ts';
-
-// const Highlight = ({ children }: { children: React.ReactNode }) => (
-//   <span className="inline px-1 py-1 mx-0.5 rounded-md bg-white/70 text-gray-900 font-medium shadow-sm">
-//     {children}
-//   </span>
-// );
 
 const SectionTitle = ({ title, subtitle }: { title: string, subtitle?: string }) => (
   <div className="mb-12">
@@ -27,9 +22,11 @@ const SectionTitle = ({ title, subtitle }: { title: string, subtitle?: string })
 );
 
 function HomePage() {
+  const [activeTechCategory, setActiveTechCategory] = useState(0);
+
   const techCategories = [
     {
-      title: 'Frontend & Mobile Development',
+      title: 'Frontend & Mobile',
       items: [
         { name: 'React JS', icon: 'https://cdn.simpleicons.org/react/61DAFB', caption: 'Web Development' },
         { name: 'React Native', icon: 'https://cdn.simpleicons.org/react/61DAFB', caption: 'Mobile Development' },
@@ -45,14 +42,14 @@ function HomePage() {
       ],
     },
     {
-      title: 'User Interface/UX & Digital Design',
+      title: 'UI/UX & Design',
       items: [
         { name: 'Figma', icon: 'https://cdn.simpleicons.org/figma/F24E1E', caption: 'Interactive Prototyping' },
         { name: 'Canva', icon: Canvaicon, caption: 'Digital asset design' },
       ],
     },
     {
-      title: 'Backend & Database Engineering',
+      title: 'Backend & Database',
       items: [
         { name: 'Django', icon: 'https://cdn.simpleicons.org/django/092E20', caption: 'Framework' },
         { name: 'Supabase', icon: 'https://cdn.simpleicons.org/supabase/3FCF8E', caption: 'BaaS' },
@@ -321,7 +318,7 @@ function HomePage() {
 
         </section>
 
-        {/* ABOUT SECTION */}
+        {/* ABOUT SECTION — condensed: tabbed tech stack + pill-style soft skills */}
         <section id="about" className="bg-[#CECECE] px-6 md:px-12 lg:px-20 py-24 font-poppins relative z-10">
           <SectionTitle
             subtitle="About Me"
@@ -341,14 +338,6 @@ function HomePage() {
               </p>
 
               <p>
-                Over time, I developed projects involving scheduling systems,
-                learning platforms, and management applications. Through these
-                experiences, I gained practical understanding of frontend
-                development, backend architecture, database management,
-                authentication systems, and user-centered design principles.
-              </p>
-
-              <p>
                 Beyond technical skills, I value communication, collaboration,
                 and adaptability. I enjoy working with teams, learning from
                 experienced developers, and continuously improving my craft
@@ -362,86 +351,75 @@ function HomePage() {
               title="Technologies I Work With"
             />
 
-            {/* Technologies — glassmorphism list, mobile-first */}
-            <div className="space-y-6 mb-16">
-              {techCategories.map((category, index) => {
+            {/* Category tabs — only the active category's chips render, so this stays one card tall instead of four */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {techCategories.map((category, index) => (
+                <button
+                  key={category.title}
+                  type="button"
+                  onClick={() => setActiveTechCategory(index)}
+                  className={`
+                    rounded-full px-4 py-2 text-xs sm:text-sm font-semibold border transition-all duration-200
+                    ${activeTechCategory === index
+                      ? 'bg-gray-900 text-white border-gray-900 shadow-sm'
+                      : 'bg-white/60 text-gray-600 border-gray-200 hover:bg-white hover:text-gray-900'
+                    }
+                  `}
+                >
+                  {category.title}
+                </button>
+              ))}
+            </div>
 
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    whileHover={{ y: -4 }}
-                    className="
-                      group relative overflow-hidden rounded-[28px] p-6 sm:p-8
-                      bg-white/20 backdrop-blur-2xl backdrop-saturate-150
-                      border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.10)]
-                      transition-all duration-300
-                      hover:bg-white/30 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]
-                    "
-                  >
-                    {/* Glass highlight */}
-                    <div className="absolute inset-0 bg-linear-to-br from-white/40 via-white/10 to-transparent pointer-events-none" />
-                    <div className="absolute top-0 left-0 h-1/2 w-full bg-linear-to-b from-white/20 to-transparent pointer-events-none" />
+            <div className="relative overflow-hidden rounded-[28px] p-6 sm:p-8 bg-white/30 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.08)] mb-16">
+              {/* Glass highlight */}
+              <div className="absolute inset-0 bg-linear-to-br from-white/40 via-white/10 to-transparent pointer-events-none" />
+              <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/30 blur-3xl pointer-events-none" />
 
-                    {/* Ambient glow */}
-                    <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/30 blur-3xl pointer-events-none" />
-
-                    <div className="relative z-10">
-                      {/* Header row */}
-                      <div className="flex items-center gap-4 mb-5">
-                        <div className="min-w-0">
-                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
-                            {category.title}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-gray-600">
-                            {category.items.length} Technologies
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Tech chips — always visible, touch-friendly, wraps naturally on phone */}
-                      <div className="flex flex-wrap gap-2.5">
-                        {category.items.map((item, itemIndex) => (
-                          <div
-                            key={itemIndex}
-                            className="
-                              flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5
-                              bg-white/50 backdrop-blur-md border border-white/40
-                              shadow-sm transition-all duration-200
-                              active:scale-95 hover:bg-white/70 hover:shadow-md
-                            "
-                          >
-                            <span
-                              className="
-                                flex h-8 w-8 shrink-0 items-center justify-center rounded-full
-                                bg-white shadow-inner p-1.5
-                              "
-                            >
-                              <img
-                                src={item.icon}
-                                alt={item.name}
-                                className="h-full w-full object-contain"
-                                loading="lazy"
-                              />
-                            </span>
-                            <div className="min-w-0">
-                              <p className="text-sm font-semibold text-gray-900 truncate">
-                                {item.name}
-                              </p>
-                              <p className="text-[11px] text-gray-600 truncate">
-                                {item.caption}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTechCategory}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative z-10 flex flex-wrap gap-2.5"
+                >
+                  {techCategories[activeTechCategory].items.map((item, itemIndex) => (
+                    <div
+                      key={itemIndex}
+                      className="
+                        flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5
+                        bg-white/60 backdrop-blur-md border border-white/40
+                        shadow-sm transition-all duration-200
+                        active:scale-95 hover:bg-white/90 hover:shadow-md
+                      "
+                    >
+                      <span
+                        className="
+                          flex h-8 w-8 shrink-0 items-center justify-center rounded-full
+                          bg-white shadow-inner p-1.5
+                        "
+                      >
+                        <img
+                          src={item.icon}
+                          alt={item.name}
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                        />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate">
+                          {item.name}
+                        </p>
+                        <p className="text-[11px] text-gray-600 truncate">
+                          {item.caption}
+                        </p>
                       </div>
                     </div>
-                  </motion.div>
-                );
-              })}
+                  ))}
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <SectionTitle
@@ -449,50 +427,36 @@ function HomePage() {
               title="Core Soft Skills"
             />
 
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Pill row with hover tooltip — replaces the four large cards */}
+            <div className="flex flex-wrap gap-3">
               {softSkills.map((skill, index) => (
-                <motion.li
-                  key={index}
-                  whileHover={{
-                    y: -8,
-                    scale: 1.03,
-                  }}
-                  transition={{
-                    duration: 0.25,
-                    ease: "easeOut",
-                  }}
-                  className="group relative overflow-hidden rounded-[28px] p-6 bg-white/20 backdrop-blur-2xl
-                    backdrop-saturate-150 border border-white/30 shadow-[0_8px_32px_rgba(0,0,0,0.10)] transition-all
-                    duration-300 hover:bg-white/30 hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)]
-                  "
-                >
-                  {/* Glass highlight */}
+                <div key={index} className="group relative">
                   <div
                     className="
-                      absolute inset-0 bg-linear-to-br from-white/40 via-white/10 to-transparent pointer-events-none
+                      rounded-full px-4 py-2.5 text-sm font-semibold text-gray-900
+                      bg-white/60 backdrop-blur-md border border-white/40 shadow-sm
+                      transition-all duration-200 cursor-default
+                      hover:bg-white/90 hover:shadow-md hover:-translate-y-0.5
                     "
-                  />
-
-                  {/* Subtle top shine */}
-                  <div
-                    className="
-                      absolute top-0 left-0 h-1/2 w-full bg-linear-to-b from-white/20 to-transparent pointer-events-none
-                    "
-                  />
-
-                  {/* Content */}
-                  <div className="relative z-10">
-                    <p className="text-gray-900 text-lg font-semibold leading-tight">
-                      {skill.title}
-                    </p>
-
-                    <p className="mt-3 text-sm leading-relaxed text-gray-700">
-                      {skill.caption}
-                    </p>
+                  >
+                    {skill.title}
                   </div>
-                </motion.li>
+
+                  {/* Tooltip */}
+                  <div
+                    className="
+                      pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-56 -translate-x-1/2
+                      rounded-xl bg-gray-900 px-3 py-2 text-xs leading-snug text-white text-center
+                      opacity-0 shadow-lg transition-opacity duration-200
+                      group-hover:opacity-100
+                    "
+                  >
+                    {skill.caption}
+                    <div className="absolute left-1/2 bottom-full -translate-x-1/2 border-4 border-transparent border-b-gray-900" />
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
             </div>
           </div>
         </section>
@@ -596,11 +560,10 @@ function HomePage() {
                 Explore Projects
               </a>
               <a
-                href="/IthranBeorTurnoResume.pdf"
-                download
+                href="/contact"
                 className="px-6 py-3 rounded-xl border border-gray-100 text-white hover:bg-white/10 transition-all duration-300"
               >
-                Download Resume
+                Contact
               </a>
             </div>
           </div>

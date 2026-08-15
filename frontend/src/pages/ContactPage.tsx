@@ -19,7 +19,6 @@ function ContactPage() {
         <div className="absolute top-0 left-0 w-72 h-72 bg-gray-300/30 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-400/20 rounded-full blur-3xl"></div>
 
-        {/* HEADER */}
         <header className="px-4 py-6 md:px-10 md:py-5 font-poppins relative z-10">
           <nav className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:flex-wrap">
             <div className="flex items-center gap-3 min-w-0">
