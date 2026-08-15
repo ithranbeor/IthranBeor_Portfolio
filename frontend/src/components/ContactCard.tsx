@@ -154,7 +154,7 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
   const Icon = active.Icon;
 
   return (
-    <div className="flex w-full max-w-4xl flex-col items-center px-3 sm:px-4">
+    <div className="flex w-full max-w-lg flex-col items-center">
       <AnimatePresence mode="wait" initial={false}>
         {view === 'carousel' ? (
           <motion.div
@@ -163,9 +163,9 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={springy}
-            className="flex w-full max-w-md flex-col items-center sm:max-w-xl"
+            className="flex w-full flex-col items-center"
           >
-            <div className="flex w-full items-center justify-center gap-2 sm:gap-6 md:gap-10">
+            <div className="flex w-full items-center justify-center gap-10">
               {/* Prev */}
               <motion.button
                 type="button"
@@ -174,14 +174,13 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
                 whileTap={{ scale: 0.92 }}
                 transition={springy}
                 aria-label="Previous contact"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/30 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white/50 sm:h-9 sm:w-9"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/30 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white/50"
               >
-                <FiChevronLeft size={16} className="sm:hidden" />
-                <FiChevronLeft size={18} className="hidden sm:block" />
+                <FiChevronLeft size={18} />
               </motion.button>
 
               {/* Card */}
-              <div className="relative h-44 w-full min-w-0 sm:h-56">
+              <div className="relative h-56 w-full">
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
                   <motion.button
                     key={active.id}
@@ -194,32 +193,25 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
                     transition={springy}
                     whileHover={{ y: -3 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`absolute inset-0 flex w-full flex-col justify-between rounded-2xl bg-linear-to-br ${active.gradient} p-4 text-left text-white shadow-xl sm:rounded-3xl sm:p-6`}
+                    className={`absolute inset-0 flex w-full flex-col justify-between rounded-3xl bg-linear-to-br ${active.gradient} p-6 text-left text-white shadow-xl`}
                   >
                     {/* Top row */}
                     <div className="flex items-start justify-between">
-                      <span className="text-[9px] font-semibold uppercase tracking-[0.14em] text-white/80 sm:text-[11px] sm:tracking-[0.18em]">
+                      <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/80">
                         Ithran Beor
                       </span>
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm sm:h-9 sm:w-9">
+                      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm">
                         {active.image ? (
-                          <img src={active.image} alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" />
+                          <img src={active.image} alt="" className="h-5 w-5 object-contain" />
                         ) : (
-                          <>
-                            {Icon && (
-                              <Icon size={14} style={{ color: active.iconColor }} className="sm:hidden" />
-                            )}
-                            {Icon && (
-                              <Icon size={18} style={{ color: active.iconColor }} className="hidden sm:block" />
-                            )}
-                          </>
+                          Icon && <Icon size={18} style={{ color: active.iconColor }} />
                         )}
                       </span>
                     </div>
 
                     {/* Bottom row */}
-                    <div className="min-w-0">
-                      <p className="truncate text-lg font-semibold leading-tight sm:text-2xl">{active.title}</p>
+                    <div>
+                      <p className="text-2xl font-semibold leading-tight">{active.title}</p>
                       <AnimatePresence mode="wait" initial={false}>
                         {copiedId === active.id ? (
                           <motion.p
@@ -227,9 +219,9 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
                             initial={{ opacity: 0, y: 4 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -4 }}
-                            className="mt-1 flex items-center gap-1 text-xs font-medium text-emerald-300 sm:text-sm"
+                            className="mt-1 flex items-center gap-1 text-sm font-medium text-emerald-300"
                           >
-                            <FiCheck size={13} /> Copied to clipboard
+                            <FiCheck size={14} /> Copied to clipboard
                           </motion.p>
                         ) : (
                           <motion.p
@@ -237,7 +229,7 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
                             initial={{ opacity: 0, y: 4 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -4 }}
-                            className="mt-1 truncate text-xs text-white/80 sm:text-sm"
+                            className="mt-1 truncate text-sm text-white/80"
                           >
                             {active.subtitle}
                           </motion.p>
@@ -256,15 +248,14 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
                 whileTap={{ scale: 0.92 }}
                 transition={springy}
                 aria-label="Next contact"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/30 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white/50 sm:h-9 sm:w-9"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/40 bg-white/30 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white/50"
               >
-                <FiChevronRight size={16} className="sm:hidden" />
-                <FiChevronRight size={18} className="hidden sm:block" />
+                <FiChevronRight size={18} />
               </motion.button>
             </div>
 
             {/* Dots + See all */}
-            <div className="mt-4 flex w-full flex-wrap items-center justify-center gap-3 sm:gap-4">
+            <div className="mt-4 flex w-full items-center justify-center gap-4">
               <div className="flex items-center gap-1.5">
                 {cards.map((card, i) => (
                   <button
@@ -281,7 +272,7 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
               <button
                 type="button"
                 onClick={() => setView('grid')}
-                className="text-xs font-medium text-gray-700 transition hover:text-gray-900"
+                className="flex items-center gap-1.5 text-xs font-medium text-gray-700 transition hover:text-gray-900"
               >
                 See all cards
               </button>
@@ -294,10 +285,9 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
               whileHover={{ y: -2 }}
               whileTap={{ scale: 0.97 }}
               transition={springy}
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-gray-500/50 px-5 py-2 text-xs font-medium text-white shadow-sm backdrop-blur-sm transition hover:bg-gray-500/85 sm:px-6 sm:py-2.5 sm:text-sm"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-gray-500/50 px-6 py-2.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition hover:bg-gray-500/85"
             >
-              <FiDownload size={13} className="sm:hidden" />
-              <FiDownload size={14} className="hidden sm:block" />
+              <FiDownload size={14} />
               Download Resume
             </motion.a>
           </motion.div>
@@ -322,7 +312,7 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {cards.map((card, i) => {
                 const CardIcon = card.Icon;
                 return (
@@ -336,20 +326,18 @@ export default function ContactCard({ resumeUrl = '/IthranBeorTurnoResume.pdf' }
                     whileHover={{ y: -3, scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
                     transition={springy}
-                    className={`flex h-28 flex-col justify-between rounded-2xl bg-linear-to-br ${card.gradient} p-3.5 text-left text-white shadow-md sm:h-36 sm:p-4 md:h-44 md:p-5`}
+                    className={`flex h-28 flex-col justify-between rounded-2xl bg-linear-to-br ${card.gradient} p-3.5 text-left text-white shadow-md`}
                   >
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm sm:h-9 sm:w-9 md:h-10 md:w-10">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm">
                       {card.image ? (
-                        <img src={card.image} alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" />
+                        <img src={card.image} alt="" className="h-4 w-4 object-contain" />
                       ) : (
                         CardIcon && <CardIcon size={14} style={{ color: card.iconColor }} />
                       )}
                     </span>
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold leading-tight sm:text-base md:text-lg">
-                        {card.title}
-                      </p>
-                      <p className="mt-0.5 truncate text-[10px] text-white/75 sm:text-xs">
+                    <div>
+                      <p className="text-sm font-semibold leading-tight">{card.title}</p>
+                      <p className="mt-0.5 truncate text-[10px] text-white/75">
                         {copiedId === card.id ? 'Copied!' : card.subtitle}
                       </p>
                     </div>
