@@ -1,7 +1,10 @@
 // frontend/src/data/projects.ts
+
+// LearnIT Project Images
 import LearnITLogo from "../assets/logo/LearnITLogo.jpg";
 import LearnITPic1 from "../assets/images/LearnITPic1.png";
 
+// ExamSync Project Images
 import ExamSyncLogo from "../assets/logo/ExamSyncLogo.jpg";
 import ExamSyncPic1 from "../assets/images/examsync/Pic1.png";
 import ExamSyncPic2 from "../assets/images/examsync/Pic2.png";
@@ -9,11 +12,17 @@ import ExamSyncPic3 from "../assets/images/examsync/Pic3.png";
 import ExamSyncPic4 from "../assets/images/examsync/Pic4.png";
 import ExamSyncVid1 from "../assets/images/examsync/ExamSyncVid1.mp4";
 
+// PDFConvert Project Images
 import SwiftconvertLogo from "../assets/logo/PDFCLogo.svg";
 import SwiftconvertPic1 from "../assets/images/PDFConverter/Pic1.png";
 import SwiftconvertPic2 from "../assets/images/PDFConverter/Pic2.png";
 import SwiftconvertPic3 from "../assets/images/PDFConverter/Pic3.png";
 import SwiftconvertVid1 from "../assets/images/PDFConverter/SwiftConvertVid1.mp4";
+
+// ValueCare Project Images
+import ValueCareLogo from "../assets/logo/ValueCareLogo.png";
+import ValueCarePic1 from "../assets/images/ValueCare/img1.png";
+import ValueCarePic2 from "../assets/images/ValueCare/img2.png";
 
 export type ProjectCategory = "solo" | "group" | "collaboration";
 
@@ -37,6 +46,8 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+
+  // Project 1: LearnIT
   {
     id: "learnit",
     name: "LearnIT",
@@ -53,6 +64,8 @@ export const projects: Project[] = [
       { id: "learnit-3", label: "Pic 3", src: LearnITPic1 },
     ],
   },
+
+  // Project 2: ExamSync
   {
     id: "examsync",
     name: "ExamSync",
@@ -74,6 +87,7 @@ export const projects: Project[] = [
     liveUrl: "https://examsyncv2.com",
   },
 
+  // Project 3: PDFConvert
   {
     id: "swiftconvert",
 
@@ -101,5 +115,33 @@ export const projects: Project[] = [
     ],
 
     liveUrl: "https://fileconvert-iota.vercel.app/",
+  },
+
+  // Project 4: ValueCare
+  {
+    id: "valuecare",
+
+    name: "ValueCare",
+
+    category: "solo",
+
+    logo: ValueCareLogo,
+
+    targetAudience: "Students, Professionals, Businesses",
+
+    version: "1.0.0",
+
+    coreStack:
+      "Django, Django REST Framework, PostgreSQL, React, TypeScript, Vite",
+
+    description:
+      "ValueCare is a comprehensive medical supplies management platform that streamlines the procurement and distribution of essential healthcare products. The platform is designed to enhance efficiency and reduce costs for medical facilities while ensuring the availability of high-quality supplies.",
+
+    proofs: [
+      { id: "swiftconvert-1", label: "Pic 1", src: ValueCarePic1 },
+      { id: "swiftconvert-2", label: "Pic 2", src: ValueCarePic2 },
+    ],
+
+    liveUrl: "https://valuecare-web-ph-one.vercel.app/",
   },
 ];

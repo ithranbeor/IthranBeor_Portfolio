@@ -13,9 +13,35 @@ import exp2_2 from '../assets/images/Work Experiences/Capstone/img2.jpg'
 import exp2_3 from '../assets/images/Work Experiences/Capstone/img3.jpg'
 import exp2_4 from '../assets/images/Work Experiences/Capstone/img4.jpg'
 
+// ValueCare Medical Supplies Experience Images
+import ValueCareLogo from '../assets/logo/ValueCareLogo.png'
+import exp3_1 from '../assets/images/Work Experiences/ValueCare/img1.png'
+import exp3_2 from '../assets/images/Work Experiences/ValueCare/img2.png'
+
 import type { ExperienceItem } from '../components/ExperienceAccordion';
 
 export const experiences: ExperienceItem[] = [
+
+  // Experience 3: ValueCare (2026)
+  {
+    id: 'exp3',
+    logo: ValueCareLogo,
+    title: 'ValueCare Medical Supplies - Full-Stack Developer',
+    subtitle: 'September 2026',
+    images: [
+      exp3_1,
+      exp3_2,
+
+    ],
+    orgName: 'ValueCare Medical Supplies',
+    address: 'ValueCare Medical Supplies, Cagayan De Oro City, Misamis Oriental',
+    pills: [
+      "Front-End Engineer",
+      "Back-End Engineer",
+    ],
+  },
+
+  // Experience 1: USTP Internship
   {
     id: 'exp1',
     logo: USTPLogo,
@@ -72,6 +98,8 @@ export const experiences: ExperienceItem[] = [
     supervisionNote:
       "Maintained direct accountability and reporting under the supervision of Dr. Junar A. Landicho (USTP CITC Dean), Mr. Dario Cruz Miñoza, and Mr. Marlon Tumamak.",
   },
+
+  // Experience 2: Capstone Project
   {
     id: 'exp2',
     logo: USTPLogo,
