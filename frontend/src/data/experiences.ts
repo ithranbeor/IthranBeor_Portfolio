@@ -15,8 +15,8 @@ import exp2_4 from '../assets/images/Work Experiences/Capstone/img4.jpg'
 
 // ValueCare Medical Supplies Experience Images
 import ValueCareLogo from '../assets/logo/ValueCareLogo.png'
-import exp3_1 from '../assets/images/Work Experiences/ValueCare/img1.png'
-import exp3_2 from '../assets/images/Work Experiences/ValueCare/img2.png'
+import exp3_1 from '../assets/images/ValueCare/img1.png'
+import exp3_2 from '../assets/images/ValueCare/img2.png'
 
 import type { ExperienceItem } from '../components/ExperienceAccordion';
 
