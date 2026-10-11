@@ -22,7 +22,7 @@ import SwiftconvertVid1 from "../assets/images/PDFConverter/SwiftConvertVid1.mp4
 // ValueCare Project Images
 import ValueCareLogo from "../assets/logo/ValueCareLogo.png";
 import ValueCarePic1 from "../assets/images/ValueCare/img1.png";
-import ValueCarePic2 from "../assets/images/ValueCare/img2.png";
+import ValueCarePic2 from "../assets/images/Work Experiences/ValueCare/img2.png";
 
 export type ProjectCategory = "solo" | "group" | "collaboration";
 
